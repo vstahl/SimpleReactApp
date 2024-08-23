@@ -13,6 +13,8 @@ test('increments count on button click', () => {
   const buttonElement = screen.getByRole('button', { name: /count is 0/i });
   fireEvent.click(buttonElement);
   expect(buttonElement).toHaveTextContent('count is 1');
+  fireEvent.click(buttonElement);
+  expect(buttonElement).toHaveTextContent('count is 2');
 });
 
 test('renders logos with correct links', () => {
