@@ -24,6 +24,8 @@ jobs:
 
     - name: Download build artifacts
       uses: actions/download-artifact@v2
+      with:
+        name: artifact
       
     - name: List downloaded artifacts (Debugging Step)
       run: |
@@ -37,4 +39,4 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         action: "upload"
         app_location: "/"
-        output_location: "dist"
+        output_location: "artifact"
