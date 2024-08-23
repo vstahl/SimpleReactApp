@@ -17,11 +17,21 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: List all artifacts (Debugging Step)
+      run: |
+        echo "Listing all artifacts:"
+        ls -R
+
     - name: Download build artifacts
       uses: actions/download-artifact@v2
       with:
         name: simplereactapp
         path: dist
+    
+    - name: List downloaded artifacts (Debugging Step)
+      run: |
+        echo "Listing downloaded artifacts:"
+        ls -R dist
     
     - name: Deploy to Azure Static Web Apps
       uses: Azure/static-web-apps-deploy@v1
