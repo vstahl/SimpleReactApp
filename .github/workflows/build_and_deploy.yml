@@ -26,6 +26,7 @@ jobs:
     - run: npm test
 
   deploy:
+    name: deploy to dev environment
     runs-on: ubuntu-latest
     needs: build
 
