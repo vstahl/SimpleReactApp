@@ -1,0 +1,75 @@
+name: Deploy Static WebApp
+
+on: workflow_dispatch
+
+jobs:
+  deploy-dev:
+    name: Deploy to DEV
+    runs-on: ubuntu-latest
+    environment: dev
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@main
+
+    - name: Log into Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy Bicep file
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+        resourceGroupName: ${{ vars.AZURE_RG }}
+        template: ./infra/staticWebApp.bicep
+        parameters: 'name=${{ vars.STATICWEBAPPNAME }} sku=Standard'
+        failOnStdErr: false
+
+  deploy-staging:
+    name: Deploy to STAGING
+    runs-on: ubuntu-latest
+    environment: staging
+    needs: deploy-dev
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@main
+
+      - name: Log into Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy Bicep file
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ vars.AZURE_RG }}
+          template: ./infra/staticWebApp.bicep
+          parameters: 'name=${{ vars.STATICWEBAPPNAME }} sku=Standard'
+          failOnStdErr: false
+
+  deploy-prod:
+    name: Deploy to PROD
+    runs-on: ubuntu-latest
+    environment: staging
+    needs: deploy-staging
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@main
+
+      - name: Log into Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy Bicep file
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ vars.AZURE_RG }}
+          template: ./infra/staticWebApp.bicep
+          parameters: 'name=${{ vars.STATICWEBAPPNAME }} sku=Standard'
+          failOnStdErr: false
