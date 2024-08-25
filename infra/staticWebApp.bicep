@@ -9,6 +9,10 @@ resource staticWebApp 'Microsoft.Web/staticSites@2022-09-01' = {
     name: sku
     tier: sku
   }
+  properties: {
+    buildProperties: {
+    }
+  }
 }
 
 output staticWebAppUrl string = staticWebApp.properties.defaultHostname
